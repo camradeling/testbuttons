@@ -1,0 +1,3 @@
+[submodule "submodules/modbusgw"]
+	path = submodules/modbusgw
+	url = git@github.com:camradeling/modbusgw.git

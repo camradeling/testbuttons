@@ -14,6 +14,11 @@ set(Qt6_DIR "/home/camradeling/Qt/6.8.2/gcc_64")
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
 add_subdirectory(submodules/modbusgw)
+include_directories(submodules/modbusgw)
+include_directories(submodules/modbusgw/submodules/channellib)
+include_directories(submodules/modbusgw/submodules/channellib/messagequeue)
+include_directories(submodules/modbusgw/submodules/threadlib)
+include_directories(submodules/modbusgw/submodules/modbuslib)
 
 set(PROJECT_SOURCES
         main.cpp
@@ -52,7 +57,12 @@ else()
 endif()
 
 target_link_libraries(testbuttons PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
-target_link_libraries(testbuttons PRIVATE libmodbusgw_static.a)
+target_link_libraries(testbuttons PRIVATE
+        libmodbusgw_static.a
+        libChannelLib_static.a
+        libProgramThread_static.a
+        pthread
+        mxml)
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
 # If you are developing for iOS or macOS you should consider setting an

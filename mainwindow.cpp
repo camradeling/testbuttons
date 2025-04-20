@@ -3,8 +3,8 @@
 #include <QWidget>
 #include <QScrollArea>
 
-MainWindow::MainWindow(const QList<TestButtonParams>& buttons, QWidget *parent)
-    : QMainWindow(parent)
+MainWindow::MainWindow(const QList<TestButtonParams>& buttons, shared_ptr<ModbusGateway> mgw, QWidget *parent)
+    : QMainWindow(parent), modbusgw(mgw)
 {
     setupUI(buttons);
     setWindowTitle("Test Buttons Control Panel");

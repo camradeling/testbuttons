@@ -5,6 +5,7 @@ project(testbuttons)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
+link_directories(${CMAKE_BINARY_DIR})
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -12,6 +13,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(Qt6_DIR "/home/camradeling/Qt/6.8.2/gcc_64")
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
+add_subdirectory(submodules/modbusgw)
 
 set(PROJECT_SOURCES
         main.cpp
@@ -29,6 +31,8 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         iniparser.h
         iniparser.cpp
     )
+add_dependencies(testbuttons modbusgw_static)
+
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET testbuttons APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
 #                 ${CMAKE_CURRENT_SOURCE_DIR}/android)
@@ -48,6 +52,7 @@ else()
 endif()
 
 target_link_libraries(testbuttons PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+target_link_libraries(testbuttons PRIVATE libmodbusgw_static.a)
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
 # If you are developing for iOS or macOS you should consider setting an
@@ -62,7 +67,6 @@ install(TARGETS testbuttons
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
-
 if(QT_VERSION_MAJOR EQUAL 6)
     qt_finalize_executable(testbuttons)
 endif()

@@ -1,20 +1,37 @@
-#include "mainwindow.h"
-#include "testbutton.h"
 #include <QApplication>
+#include <QCommandLineParser>
+#include "mainwindow.h"
+#include "iniparser.h"
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
     QApplication a(argc, argv);
+    QCoreApplication::setApplicationName("TestButtonApp");
+    QCoreApplication::setApplicationVersion("1.0");
 
-    // Создаём структуру с параметрами
-    TestButtonParams params;
-    params.buttonName = "Кнопка 1";
-    params.countdownEnabled = true;
-    params.countdownInterval = 15;  // 15 секунд
+    // Парсинг аргументов
+    QCommandLineParser parser;
+    parser.addHelpOption();
+    parser.addVersionOption();
+    parser.addPositionalArgument("config", "Path to buttons config file (.ini)");
+    parser.process(a);
 
-    TestButton widget(params);
-    widget.setWindowTitle("Демо TestButton с параметрами");
-    widget.resize(500, 100);
-    widget.show();
+    const QStringList args = parser.positionalArguments();
+    if (args.isEmpty()) {
+        qCritical("Error: Config file not specified");
+        parser.showHelp(1);
+    }
+
+    // Загрузка конфигурации
+    QList<TestButtonParams> buttons = IniParser::parseButtonsConfig(args.first());
+    if (buttons.isEmpty()) {
+        qCritical("No valid buttons configuration loaded");
+        return 1;
+    }
+
+    // Создание и отображение главного окна
+    MainWindow w(buttons);
+    w.show();
 
     return a.exec();
 }

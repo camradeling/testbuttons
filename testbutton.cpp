@@ -53,9 +53,9 @@ void TestButton::onButtonClicked() {
     } else {
         if (m_countdownEnabled) {
             m_timer->stop();
-            m_countdownLabel->setVisible(false);
             m_currentTime = m_countdownInterval;
             m_countdownLabel->setText(QString::number(m_currentTime) + " сек.");
+            m_countdownLabel->setVisible(false);
         }
     }
     updateButtonState();
@@ -68,6 +68,7 @@ void TestButton::updateCountdown() {
     if (m_currentTime <= 0) {
         m_timer->stop();
         m_button->setChecked(false);
+        m_countdownLabel->setVisible(false);
         updateButtonState();
     }
 }

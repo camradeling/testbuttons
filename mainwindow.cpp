@@ -1,15 +1,36 @@
 #include "mainwindow.h"
-#include "./ui_mainwindow.h"
+#include <QVBoxLayout>
+#include <QWidget>
+#include <QScrollArea>
 
-MainWindow::MainWindow(QWidget *parent)
+MainWindow::MainWindow(const QList<TestButtonParams>& buttons, QWidget *parent)
     : QMainWindow(parent)
-    , ui(new Ui::MainWindow)
 {
-    ui->setupUi(this);
-    setWindowTitle("Ох Ебааать!");
+    setupUI(buttons);
+    setWindowTitle("Test Buttons Control Panel");
+    resize(400, 600);
 }
 
-MainWindow::~MainWindow()
+void MainWindow::setupUI(const QList<TestButtonParams>& buttons)
 {
-    delete ui;
+    // Основной контейнер с прокруткой
+    QScrollArea *scrollArea = new QScrollArea(this);
+    scrollArea->setWidgetResizable(true);
+
+    // Центральный виджет для кнопок
+    QWidget *centralWidget = new QWidget();
+    QVBoxLayout *mainLayout = new QVBoxLayout(centralWidget);
+
+    // Добавляем TestButton для каждой конфигурации
+    for (const TestButtonParams& params : buttons) {
+        TestButton *buttonWidget = new TestButton(params, centralWidget);
+        mainLayout->addWidget(buttonWidget);
+    }
+
+    // Растягиваем последний элемент
+    mainLayout->addStretch();
+
+    // Настройка скролла
+    scrollArea->setWidget(centralWidget);
+    setCentralWidget(scrollArea);
 }

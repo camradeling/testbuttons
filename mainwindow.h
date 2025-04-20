@@ -2,22 +2,18 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-
-QT_BEGIN_NAMESPACE
-namespace Ui {
-class MainWindow;
-}
-QT_END_NAMESPACE
+#include <QScrollArea>
+#include "testbutton.h"
 
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
 public:
-    MainWindow(QWidget *parent = nullptr);
-    ~MainWindow();
+    explicit MainWindow(const QList<TestButtonParams>& buttons, QWidget *parent = nullptr);
 
 private:
-    Ui::MainWindow *ui;
+    void setupUI(const QList<TestButtonParams>& buttons);
 };
+
 #endif // MAINWINDOW_H

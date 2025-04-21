@@ -5,7 +5,8 @@ TestButton::TestButton(const TestButtonParams &params, QWidget *parent)
     : QWidget(parent),
     m_countdownEnabled(params.countdownEnabled),
     m_countdownInterval(params.countdownInterval),
-    m_currentTime(params.countdownInterval)
+    m_currentTime(params.countdownInterval),
+    m_coil_number(params.coil_number)
 {
     // Инициализация виджетов
     m_nameLabel = new QLabel(params.buttonName, this);
@@ -50,6 +51,7 @@ void TestButton::onButtonClicked() {
             m_timer->start();
             m_countdownLabel->setVisible(true);
         }
+        emit send_set_coil_request_signal(this->m_coil_number, true);
     } else {
         if (m_countdownEnabled) {
             m_timer->stop();
@@ -57,8 +59,8 @@ void TestButton::onButtonClicked() {
             m_countdownLabel->setText(QString::number(m_currentTime) + " сек.");
             m_countdownLabel->setVisible(false);
         }
+        emit send_set_coil_request_signal(this->m_coil_number, false);
     }
-    updateButtonState();
 }
 
 void TestButton::updateCountdown() {
@@ -69,16 +71,27 @@ void TestButton::updateCountdown() {
         m_timer->stop();
         m_button->setChecked(false);
         m_countdownLabel->setVisible(false);
-        updateButtonState();
+        emit send_set_coil_request_signal(this->m_coil_number, false);
     }
+
 }
 
-void TestButton::updateButtonState() {
-    if (m_button->isChecked()) {
+void TestButton::updateButtonState(bool status) {
+    if (status) {
         m_button->setText("Выключить");
         m_button->setStyleSheet("QPushButton { color: #FF6B6B; }");
     } else {
         m_button->setText("Включить");
         m_button->setStyleSheet("QPushButton { color: green; }");
     }
+}
+
+QString TestButton::get_name()
+{
+    return m_nameLabel->text();
+}
+
+int TestButton::get_coil_number()
+{
+    return m_coil_number;
 }

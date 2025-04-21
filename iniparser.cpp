@@ -28,7 +28,8 @@ QList<TestButtonParams> IniParser::parseButtonsConfig(const QString& filePath)
         params.buttonName = settings.value("Name", "").toString().trimmed();
         params.countdownEnabled = settings.value("CountdownEnabled", false).toBool();
         params.countdownInterval = settings.value("CountdownInterval", 10).toInt();
-
+        params.coil_number = settings.value("CoilNumber", 10).toInt();
+        fprintf(stderr, "adding %s, coil number %d\n", params.buttonName.toStdString().c_str(), params.coil_number);
         if (validateParams(params)) {
             buttons.append(params);
         }
